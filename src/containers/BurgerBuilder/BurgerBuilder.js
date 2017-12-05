@@ -38,7 +38,7 @@ class BurguerBuilder extends Component {
         return sum + el;
       }, 0);
 
-    this.setState({purchasable: sum > 0})
+    this.setState({ purchasable: sum > 0 })
   }
 
   addIngredientHandler(type) {
@@ -53,7 +53,7 @@ class BurguerBuilder extends Component {
     const priceAddition = INGREDIENT_PRICES[type];
     const newPrice = oldPrice + priceAddition;
 
-    this.setState({ingredients: updatedIngredients, totalPrice: newPrice});
+    this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
     this.updatePurchaseState(updatedIngredients);
   }
 
@@ -63,7 +63,7 @@ class BurguerBuilder extends Component {
     const updatedIngredients = {
       ...this.state.ingredients
     };
-    updatedIngredients[type] = (newCount >= 0 ) ? newCount : 0;
+    updatedIngredients[type] = (newCount >= 0) ? newCount : 0;
 
     const oldPrice = this.state.totalPrice;
     const priceDeduction = INGREDIENT_PRICES[type];
@@ -74,7 +74,11 @@ class BurguerBuilder extends Component {
   }
 
   purchaseHandler() {
-    this.setState({purchasing: true});
+    this.setState({ purchasing: true });
+  }
+
+  modalDismissedHandler() {
+    this.setState({ purchasing: false });
   }
 
   render() {
@@ -88,7 +92,7 @@ class BurguerBuilder extends Component {
 
     return (
       <Aux>
-        <Modal show={this.state.purchasing}>
+        <Modal show={this.state.purchasing} modalDismissed={this.modalDismissedHandler.bind(this)} >
           <OrderSummary ingredients={this.state.ingredients} />
           <p>Lorem, ipsum dolor.</p>
         </Modal>
