@@ -21,17 +21,23 @@ class BurguerBuilder extends Component {
     super(props);
 
     this.state = {
-      ingredients: {
-        salad: 0,
-        bacon: 0,
-        cheese: 0,
-        meat: 0
-      },
+      ingredients: null,
       totalPrice: 4,
       purchasable: false,
       purchasing: false,
-      loading: false
+      loading: false,
+      error: false
     }
+  }
+
+  componentDidMount() {
+    axios.get('/ingredients.json')
+      .then(response => {
+        this.setState({ingredients: response.data});
+      })
+      .catch(error => {
+        this.setState({error: true});
+      })
   }
 
   updatePurchaseState(ingredients) {
@@ -113,6 +119,10 @@ class BurguerBuilder extends Component {
   }
 
   render() {
+    if (this.state.error) {
+      return <p>Ingredients can't be loaded</p>
+    }
+
     const disabledInfo = {
       ...this.state.ingredients
     };
@@ -129,23 +139,33 @@ class BurguerBuilder extends Component {
       />
     );
 
+    let burger = <Spinner />
+
+    if (this.state.ingredients) {
+      burger = (
+        <Aux>
+          <Burger ingredients={this.state.ingredients} />
+          <BuildControls
+            added={this.addIngredientHandler.bind(this)}
+            removed={this.removeIngredientHandler.bind(this)}
+            disabled={disabledInfo}
+            price={this.state.totalPrice}
+            purchasable={this.state.purchasable}
+            ordered={this.purchaseHandler.bind(this)}
+          />
+        </Aux>
+      );
+    }
+
     return (
       <Aux>
         <Modal show={this.state.purchasing} modalDismissed={this.modalDismissedHandler.bind(this)} >
 
-          {this.state.loading ? <Spinner /> : orderSummary}
+          {this.state.loading || !this.state.ingredients ? <Spinner /> : orderSummary}
 
           <p>Lorem, ipsum dolor.</p>
         </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls
-          added={this.addIngredientHandler.bind(this)}
-          removed={this.removeIngredientHandler.bind(this)}
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
-          ordered={this.purchaseHandler.bind(this)}
-        />
+        {burger}
       </Aux>
     );
   }
