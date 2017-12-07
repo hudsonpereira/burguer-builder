@@ -16,7 +16,6 @@ class BurguerBuilder extends Component {
     super(props);
 
     this.state = {
-      purchasable: false,
       purchasing: false,
       loading: false,
       error: false
@@ -33,7 +32,7 @@ class BurguerBuilder extends Component {
       })
   }
 
-  updatePurchaseState(ingredients) {
+  isPurchasable(ingredients) {
     const sum = Object.keys(ingredients)
       .map(key => {
         return ingredients[key];
@@ -42,7 +41,7 @@ class BurguerBuilder extends Component {
         return sum + el;
       }, 0);
 
-    this.setState({ purchasable: sum > 0 })
+    return sum > 0;
   }
 
   purchaseHandler() {
@@ -102,7 +101,7 @@ class BurguerBuilder extends Component {
             removed={this.props.onIngredientRemoved}
             disabled={disabledInfo}
             price={this.props.totalPrice}
-            purchasable={this.state.purchasable}
+            purchasable={this.isPurchasable(this.props.ingredients)}
             ordered={this.purchaseHandler.bind(this)}
           />
         </Aux>
