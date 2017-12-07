@@ -7,7 +7,7 @@ import { createStore, applyMiddleware, compose } from 'redux';
 import './index.css';
 import App from './App';
 import registerServiceWorker from './registerServiceWorker';
-import reducer from './store/reducer';
+import burgerBuilderReducer from './store/reducers/burgerBuilder';
 
 const logger = store => {
   return next => {
@@ -24,7 +24,7 @@ const logger = store => {
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const store = createStore(reducer, composeEnhancers(applyMiddleware(logger)));
+const store = createStore(burgerBuilderReducer, composeEnhancers(applyMiddleware(logger)));
 
 const app = (
   <Provider store={store}>
