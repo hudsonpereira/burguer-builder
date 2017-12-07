@@ -45,6 +45,7 @@ class BurguerBuilder extends Component {
   }
 
   purchaseContinueHandler() {
+    this.props.onPurchaseInit();
     this.props.history.push('/checkout');
     // const query = [];
 
@@ -126,7 +127,8 @@ const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: (ingredient) => dispatch(actions.addIngredient(ingredient)),
     onIngredientRemoved: (ingredient) => dispatch(actions.removeIngredient(ingredient)),
-    initIngredients: () => dispatch(actions.initIngredients())
+    initIngredients: () => dispatch(actions.initIngredients()),
+    onPurchaseInit: () => dispatch(actions.purchaseInit())
   }
 }
 
