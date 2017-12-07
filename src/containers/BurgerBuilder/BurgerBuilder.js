@@ -11,19 +11,11 @@ import Spinner from '../../components/UI/Spinner/Spinner'
 import withErrorHandler from '../../hoc/withErrorHandler/withErrorHandler';
 import * as actionTypes from '../../store/actions';
 
-const INGREDIENT_PRICES = {
-  salad: 0.5,
-  cheese: 0.4,
-  meat: 1.3,
-  bacon: 0.7,
-};
-
 class BurguerBuilder extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      totalPrice: 4,
       purchasable: false,
       purchasing: false,
       loading: false,
@@ -51,38 +43,6 @@ class BurguerBuilder extends Component {
       }, 0);
 
     this.setState({ purchasable: sum > 0 })
-  }
-
-  addIngredientHandler(type) {
-    const count = this.state.ingredients[type];
-    const newCount = count + 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-    updatedIngredients[type] = newCount;
-
-    const oldPrice = this.state.totalPrice;
-    const priceAddition = INGREDIENT_PRICES[type];
-    const newPrice = oldPrice + priceAddition;
-
-    this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
-    this.updatePurchaseState(updatedIngredients);
-  }
-
-  removeIngredientHandler(type) {
-    const count = this.state.ingredients[type];
-    const newCount = count - 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-    updatedIngredients[type] = (newCount >= 0) ? newCount : 0;
-
-    const oldPrice = this.state.totalPrice;
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const newPrice = oldPrice - priceDeduction;
-
-    this.setState({ ingredients: updatedIngredients, totalPrice: newPrice });
-    this.updatePurchaseState(updatedIngredients);
   }
 
   purchaseHandler() {
@@ -141,7 +101,7 @@ class BurguerBuilder extends Component {
             // removed={this.removeIngredientHandler.bind(this)}
             removed={this.props.onIngredientRemoved}
             disabled={disabledInfo}
-            price={this.state.totalPrice}
+            price={this.props.totalPrice}
             purchasable={this.state.purchasable}
             ordered={this.purchaseHandler.bind(this)}
           />
@@ -166,6 +126,7 @@ class BurguerBuilder extends Component {
 const mapStateToProps = state => {
   return {
     ingredients: state.ingredients,
+    totalPrice: state.totalPrice
   }
 }
 
