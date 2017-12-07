@@ -16,20 +16,12 @@ class BurguerBuilder extends Component {
     super(props);
 
     this.state = {
-      purchasing: false,
-      loading: false,
-      error: false
+      purchasing: false
     }
   }
 
   componentDidMount() {
-    axios.get('/ingredients.json')
-      .then(response => {
-        this.setState({ingredients: response.data});
-      })
-      .catch(error => {
-        this.setState({error: true});
-      })
+    this.props.initIngredients();
   }
 
   isPurchasable(ingredients) {
@@ -113,7 +105,7 @@ class BurguerBuilder extends Component {
       <Aux>
         <Modal show={this.state.purchasing} modalDismissed={this.modalDismissedHandler.bind(this)} >
 
-          {this.state.loading || !this.props.ingredients ? <Spinner /> : orderSummary}
+          {this.props.ingredients ? orderSummary : null}
 
           <p>Lorem, ipsum dolor.</p>
         </Modal>
@@ -134,6 +126,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onIngredientAdded: (ingredient) => dispatch(actions.addIngredient(ingredient)),
     onIngredientRemoved: (ingredient) => dispatch(actions.removeIngredient(ingredient)),
+    initIngredients: () => dispatch(actions.initIngredients())
   }
 }
 
